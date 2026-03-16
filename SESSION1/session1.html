@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Visual Programming | Grade 8</title>
+
+    <!-- Reveal.js 4.x CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/blood.css">
+
+    <!-- Highlight.js for code -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --r-main-font: 'Inter', sans-serif;
+            --r-heading-font: 'Inter', sans-serif;
+            --r-heading-font-weight: 700;
+            --r-main-font-size: 42px;
+            --accent-primary: #4a9eff;
+            --accent-secondary: #7c3aed;
+            --accent-highlight: #10b981;
+            --text-muted: #94a3b8;
+        }
+
+        /* Ensure slides are vertically centered and don't overflow */
+        .reveal .slides section {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding: 40px 60px;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            text-transform: none;
+            font-weight: 700;
+        }
+
+        .reveal h1 {
+            font-size: 2.8em;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h2 {
+            font-size: 2.2em;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h3 {
+            font-size: 1.6em;
+        }
+
+        .ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3em;
+            align-items: center;
+            margin-top: 0.3em;
+        }
+
+        .ladder-step {
+            padding: 0.7em 2em;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 650px;
+            max-width: 85%;
+            font-size: 1em;
+        }
+
+        .reveal p {
+            font-size: 1.3em;
+            margin: 0.4em 0;
+        }
+
+        .big-text {
+            font-size: 2.8em !important;
+            font-weight: 900;
+        }
+
+        .accent-primary {
+            color: var(--accent-primary);
+        }
+
+        .accent-secondary {
+            color: var(--accent-secondary);
+        }
+
+        .accent-highlight {
+            color: var(--accent-highlight);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .footer {
+            font-size: 0.7em;
+            opacity: 0.7;
+            margin-top: 2em;
+        }
+
+        .binary-display {
+            font-family: monospace;
+            font-size: 0.95em;
+            color: var(--accent-primary);
+            line-height: 1.4;
+            opacity: 0.85;
+            background: rgba(74, 158, 255, 0.1);
+            padding: 1em;
+            border-radius: 8px;
+        }
+
+        .switch-demo {
+            display: flex;
+            justify-content: center;
+            gap: 4em;
+            margin: 1.5em 0;
+        }
+
+        .switch-state {
+            text-align: center;
+            padding: 1.5em 2.5em;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .switch-state.off {
+            border-color: var(--text-muted);
+        }
+
+        .switch-state.on {
+            border-color: var(--accent-highlight);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .switch-label {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 0.3em;
+        }
+
+        .ladder-top {
+            background: linear-gradient(135deg, var(--accent-highlight), #059669);
+            color: #fff;
+        }
+
+        .ladder-mid {
+            background: linear-gradient(135deg, var(--accent-primary), #2563eb);
+            color: #fff;
+        }
+
+        .ladder-bottom {
+            background: linear-gradient(135deg, var(--accent-secondary), #5b21b6);
+            color: #fff;
+        }
+
+        .scratch-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0.5em auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .scratch-img {
+            width: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .overlay-box {
+            position: absolute;
+            border: 4px solid;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 4px black;
+            opacity: 0;
+            /* Hidden by default for fragments */
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* Fragment visibility handled by reveal.js */
+        .fragment.visible .overlay-box,
+        .overlay-box.fragment.visible {
+            opacity: 1;
+        }
+
+        .zone-palette {
+            left: 0.5%;
+            top: 8%;
+            width: 22%;
+            height: 91%;
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: inset 0 0 40px rgba(74, 158, 255, 0.15);
+        }
+
+        .zone-script {
+            left: 23%;
+            top: 8%;
+            width: 42%;
+            height: 91%;
+            border-color: #a1a1aa;
+            color: white;
+            box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .zone-stage {
+            left: 66%;
+            top: 8%;
+            width: 33.5%;
+            height: 50%;
+            border-color: var(--accent-highlight);
+            color: var(--accent-highlight);
+            box-shadow: inset 0 0 40px rgba(16, 185, 129, 0.15);
+        }
+
+        .zone-sprite {
+            left: 66%;
+            top: 59%;
+            width: 33.5%;
+            height: 40%;
+            border-color: var(--accent-secondary);
+            color: var(--accent-secondary);
+            box-shadow: inset 0 0 40px rgba(124, 58, 237, 0.15);
+        }
+
+        .zone-label {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .game-rules {
+            text-align: left;
+            max-width: 1000px;
+            margin: 0 auto;
+            font-size: 0.95em;
+        }
+
+        .game-rules li {
+            margin-bottom: 0.3em;
+            line-height: 1.3;
+        }
+
+        .game-rules p {
+            margin: 0.4em 0;
+        }
+
+        .term-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.8em;
+            max-width: 1400px;
+            margin: 0.5em auto;
+        }
+
+        .term-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.8em 1em;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-primary);
+            font-size: 0.9em;
+        }
+
+        .term-card strong {
+            color: var(--accent-highlight);
+            font-size: 1.1em;
+        }
+
+        /* Puzzle pieces for syntax */
+        .puzzle-demo {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin: 1em 0;
+        }
+
+        .puzzle-piece {
+            padding: 1em 2em;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .puzzle-fit {
+            background: linear-gradient(135deg, #4C97FF, #3373CC);
+            color: white;
+            box-shadow: 0 4px 20px rgba(76, 151, 255, 0.4);
+        }
+
+        .puzzle-nofit {
+            background: linear-gradient(135deg, #ff4757, #c0392b);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+            transform: rotate(15deg);
+        }
+
+        /* Variable box demo */
+        .variable-demo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em;
+            margin: 1em 0;
+        }
+
+        .variable-box {
+            width: 200px;
+            height: 120px;
+            border: 4px solid var(--accent-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: 900;
+            background: rgba(74, 158, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .variable-label {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.3em 1em;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: -15px;
+        }
+
+        /* I/O icons */
+        .io-demo {
+            display: flex;
+            justify-content: center;
+            gap: 4em;
+            margin: 1em 0;
+        }
+
+        .io-item {
+            text-align: center;
+            padding: 1.5em 2.5em;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .io-icon {
+            font-size: 3em;
+            margin-bottom: 0.2em;
+        }
+
+        .io-label {
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .scratch-block {
+            padding: 0.5em 1.2em;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .block-sensing {
+            background: #5CB1D6;
+            color: white;
+        }
+
+        .block-looks {
+            background: #9966FF;
+            color: white;
+        }
+
+        .block-data {
+            background: #FF8C1A;
+            color: white;
+        }
+
+        /* Build steps for practical exercises */
+        .build-steps {
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .build-step {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin: 0.6em 0;
+            font-size: 1.1em;
+        }
+
+        .step-number {
+            background: var(--accent-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Mission box styling */
+        .mission-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1em 1.5em;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-highlight);
+        }
+
+        .mission-box h3 {
+            margin-top: 0;
+            margin-bottom: 0.3em;
+        }
+
+        .mission-box p {
+            margin: 0.3em 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Title -->
+            <section>
+                <h1>How Do You Tell a Computer <span class="accent-primary">What to Do</span>?</h1>
+                <h3>An Introduction to Visual Programming</h3>
+                <p class="footer">Grade 8 Computer Science</p>
+
+                <aside class="notes">
+                    Opening question to the class - let a few students answer.
+                    Today: why visual programming exists and why we're starting here.
+                    ~1 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 2: The Hook -->
+            <section>
+                <h2>Computers can't actually <span class="accent-secondary">think</span></h2>
+                <p class="fragment">They only do exactly what you tell them.</p>
+                <p class="fragment">Nothing more. Nothing less.</p>
+                <p class="fragment" style="margin-top: 1em;">Our job is to give them <span
+                        class="accent-primary">precise instructions</span>.</p>
+
+                <aside class="notes">
+                    Quick poll: who thinks computers are smart?
+                    Key point: they're obedient but literal. Can't figure anything out on their own.
+                    ~1 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 3: The Hardware -->
+            <section>
+                <h2>The Building Block: <span class="accent-highlight">Transistors</span></h2>
+                <p>A transistor is a tiny switch. It can only be in two states:</p>
+
+                <div class="switch-demo">
+                    <div class="switch-state off fragment">
+                        <div class="switch-label" style="color: var(--text-muted);">OFF</div>
+                        <div style="font-size: 2em; font-weight: 600;">0</div>
+                    </div>
+                    <div class="switch-state on fragment">
+                        <div class="switch-label" style="color: var(--accent-highlight);">ON</div>
+                        <div style="font-size: 2em; font-weight: 600;">1</div>
+                    </div>
+                </div>
+
+                <p class="fragment">A modern phone has about <span class="accent-primary">15 billion</span> transistors.
+                </p>
+
+                <aside class="notes">
+                    Transistor = switch. Two states only.
+                    Billions of these working together = everything your phone does.
+                    This is why computers use 0s and 1s.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 4: Binary Code - Show the Complexity -->
+            <section>
+                <h2>Binary: The Language of <span class="accent-primary">0s and 1s</span></h2>
+
+                <div class="binary-display fragment">
+                    01001000 01100101 01101100 01101100 01101111
+                </div>
+
+                <p class="fragment" style="margin-top: 1em;">
+                    This says: "<span class="accent-highlight">Hello</span>"
+                </p>
+
+                <p class="fragment" style="margin-top: 1.5em; font-size: 1.1em;">
+                    Writing code in pure binary would be like communicating<br>
+                    by flicking a light switch on and off <strong>thousands of times</strong>.
+                </p>
+
+                <p class="fragment accent-secondary" style="margin-top: 1em; font-size: 1.3em; font-weight: 600;">
+                    This is a problem. 🤔
+                </p>
+
+                <aside class="notes">
+                    Each group of 8 = one letter.
+                    Build tension here: this is HARD. Set up the problem.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 5: The Problem Statement -->
+            <section>
+                <h2>The <span class="accent-secondary">Problem</span></h2>
+
+                <p class="fragment" style="font-size: 1.4em;">
+                    Computers speak in <span class="accent-primary">0s and 1s</span>.
+                </p>
+                <p class="fragment" style="font-size: 1.4em;">
+                    Humans speak in <span class="accent-highlight">words and ideas</span>.
+                </p>
+
+                <div class="fragment"
+                    style="margin-top: 1.5em; padding: 1em; background: rgba(124, 58, 237, 0.15); border-radius: 12px; border-left: 4px solid var(--accent-secondary);">
+                    <p style="font-size: 1.2em; margin: 0;">
+                        How do we <strong>bridge</strong> this gap?
+                    </p>
+                </div>
+
+                <p class="fragment text-muted" style="margin-top: 1.5em; font-size: 1.1em;">
+                    Early programmers asked this same question...
+                </p>
+
+                <aside class="notes">
+                    Pause here. Let the question sink in.
+                    This is the core tension that drives everything we're about to learn.
+                    "Humans needed a way to talk to computers without speaking binary."
+                    ~1 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 6: The Solution - Abstraction -->
+            <section>
+                <h2>The Solution: <span class="accent-highlight">Abstraction</span></h2>
+
+                <p class="fragment" style="font-size: 1.2em;">
+                    <strong>Abstraction</strong> = Hiding complexity behind something simple.
+                </p>
+
+                <div class="fragment"
+                    style="margin-top: 1em; display: flex; gap: 2em; align-items: center; justify-content: center;">
+                    <div
+                        style="text-align: center; padding: 1em; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <p style="font-size: 1.1em; margin: 0 0 0.5em 0;">Real Life Example:</p>
+                        <p style="font-size: 2em; margin: 0;">🚗</p>
+                        <p style="font-size: 1em; margin: 0.5em 0 0 0; color: var(--text-muted);">
+                            You press the <span class="accent-primary">gas pedal</span><br>
+                            You don't control each piston individually
+                        </p>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 1.2em; font-size: 1.15em;">
+                    Programmers did the same thing with code:
+                </p>
+                <p class="fragment" style="font-size: 1.3em;">
+                    They <strong>grouped</strong> many small instructions<br>
+                    and gave them a <span class="accent-highlight">name</span>.
+                </p>
+
+                <aside class="notes">
+                    Relatable example: driving a car. You don't think about pistons, fuel injection, etc.
+                    You just press the pedal. The complexity is HIDDEN.
+                    Same idea in programming: hide the 0s and 1s behind simple names.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 7: What is a Function? -->
+            <section>
+                <h2>The Tool: <span class="accent-primary">Functions</span></h2>
+
+                <p class="fragment" style="font-size: 1.2em;">
+                    A <strong>Function</strong> is a named group of instructions.
+                </p>
+
+                <div class="fragment"
+                    style="margin-top: 1em; display: flex; gap: 1.5em; align-items: center; justify-content: center;">
+                    <div
+                        style="background: rgba(124, 58, 237, 0.2); padding: 1em; border-radius: 10px; font-family: monospace; font-size: 0.9em;">
+                        sprite.x = sprite.x + 1<br>
+                        sprite.y = sprite.y + 0<br>
+                        redraw_screen()<br>
+                        check_boundaries()<br>
+                        update_position()<br>
+                        ...(50 more lines)
+                    </div>
+                    <div style="font-size: 2em;">→</div>
+                    <div
+                        style="background: var(--accent-primary); color: white; padding: 0.8em 1.5em; border-radius: 10px; font-weight: 700; font-size: 1.3em;">
+                        move_steps(10)
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 1.2em; font-size: 1.15em;">
+                    Instead of writing <span class="accent-secondary">50 lines</span> every time,<br>
+                    you just <strong>call the function</strong> by its name.
+                </p>
+
+                <p class="fragment accent-highlight" style="margin-top: 0.8em; font-size: 1.3em; font-weight: 600;">
+                    Functions are the building blocks of abstraction.
+                </p>
+
+                <aside class="notes">
+                    Key moment: connect abstraction to a concrete tool (functions).
+                    A function is like a recipe with a name. You say "make pancakes" instead of listing every step.
+                    Someone wrote those 50 lines ONCE, gave it a name, now everyone can use it.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 8: The Evolution - Layers of Abstraction -->
+            <section>
+                <h2>The <span class="accent-primary">Layers</span> of Abstraction</h2>
+
+                <p class="fragment" style="font-size: 1.1em; margin-bottom: 0.8em;">
+                    Each layer hides the complexity of the one below it:
+                </p>
+
+                <div class="ladder">
+                    <div class="ladder-step ladder-top fragment">
+                        <strong>Visual Programming</strong> (Scratch, Blockly)<br>
+                        <small>Drag blocks → they call functions for you</small>
+                    </div>
+                    <div class="fragment" style="font-size: 1.1em; opacity: 0.5;">↑ <span style="font-size: 0.7em;">more
+                            abstraction</span></div>
+                    <div class="ladder-step ladder-mid fragment">
+                        <strong>Text-Based Code</strong> (Python, Java)<br>
+                        <small>Write functions in human-readable words</small>
+                    </div>
+                    <div class="fragment" style="font-size: 1.1em; opacity: 0.5;">↑ <span style="font-size: 0.7em;">more
+                            abstraction</span></div>
+                    <div class="ladder-step ladder-bottom fragment">
+                        <strong>Machine Code</strong> (010101...)<br>
+                        <small>What the computer actually runs</small>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 0.8em; font-size: 1.1em;">
+                    We're starting at the <span class="accent-highlight">top</span> — the most human-friendly level.
+                </p>
+
+                <aside class="notes">
+                    This is the staircase we built! Each step adds abstraction.
+                    Bottom = raw binary (the transistors we talked about).
+                    Middle = Python/Java uses functions with text.
+                    Top = Visual blocks that CALL those functions.
+                    We start at the top to learn the LOGIC, then can go deeper later.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 9: The Reveal - A Block IS a Function -->
+            <section>
+                <h2>The Big Reveal: <span class="accent-highlight">A Block is a Function</span></h2>
+
+                <p class="fragment" style="font-size: 1.15em; margin-bottom: 0.8em;">
+                    Now you understand why this works:
+                </p>
+
+                <div
+                    style="display: flex; gap: 1.5em; align-items: stretch; justify-content: center; width: 100%; max-width: 1400px;">
+                    <!-- Visual 1: Scratch Block -->
+                    <div class="fragment"
+                        style="flex: 1; min-width: 400px; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 1em; border: 2px solid rgba(255,255,255,0.12);">
+                        <h3 class="text-muted" style="margin-top: 0; font-size: 1.2em;">What You See (Block)</h3>
+                        <div style="display: flex; align-items: center; justify-content: center; height: 120px;">
+                            <div
+                                style="background: #4C97FF; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 700; font-size: 1.2em; box-shadow: 0 8px 18px rgba(76,151,255,0.35);">
+                                move (10) steps
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual 2: Underlying Code -->
+                    <div class="fragment"
+                        style="flex: 1; min-width: 400px; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 1em; border: 2px solid rgba(255,255,255,0.12);">
+                        <h3 class="text-muted" style="margin-top: 0; font-size: 1.2em;">What It Really Is (Function)
+                        </h3>
+                        <pre style="margin: 0.5em 0; font-size: 0.75em; width: 100%;"><code class="language-python" data-trim data-noescape>
+def move_steps(sprite, steps):
+    for i in range(steps):
+        sprite.x += 1
+        sprite.redraw()
+
+move_steps(cat, 10)
+                        </code></pre>
+                    </div>
+                </div>
+
+                <!-- The full chain -->
+                <div class="fragment"
+                    style="margin-top: 0.8em; display: flex; gap: 0.5em; align-items: center; justify-content: center; font-size: 0.9em;">
+                    <span
+                        style="background: rgba(124,58,237,0.2); padding: 0.3em 0.6em; border-radius: 6px;">Binary</span>
+                    <span>→</span>
+                    <span
+                        style="background: rgba(74,158,255,0.2); padding: 0.3em 0.6em; border-radius: 6px;">Function</span>
+                    <span>→</span>
+                    <span
+                        style="background: rgba(16,185,129,0.2); padding: 0.3em 0.6em; border-radius: 6px;">Block</span>
+                </div>
+
+                <p class="fragment" style="margin-top: 0.6em; font-size: 1.1em; font-weight: 600;">
+                    When you drag a block, you're <span class="accent-primary">calling a function</span><br>
+                    that someone already wrote for you.
+                </p>
+
+                <aside class="notes">
+                    THIS IS THE PAYOFF. Everything we learned connects here.
+                    - We started with "how do we tell computers what to do?"
+                    - We saw that computers only understand binary.
+                    - We learned abstraction hides complexity.
+                    - We learned functions are named groups of code.
+                    - NOW: A Scratch block IS a function! It's abstraction in action.
+                    When they drag "move 10 steps", they're calling a function that MIT programmers wrote.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 10: Definition - Now with Context -->
+            <section>
+                <h2>What is <span class="accent-highlight">Visual Programming</span>?</h2>
+
+                <blockquote class="fragment"
+                    style="font-size: 1.1em; border-left: 4px solid var(--accent-primary); padding-left: 1em;">
+                    "A way of creating computer programs using pictures and blocks instead of writing text code."
+                </blockquote>
+
+                <p class="fragment" style="margin-top: 1em; font-size: 1.1em;">
+                    Now you know what's happening under the hood:
+                </p>
+
+                <div class="fragment"
+                    style="margin-top: 0.8em; padding: 1em; background: rgba(16, 185, 129, 0.1); border-radius: 12px; max-width: 900px;">
+                    <p style="margin: 0; font-size: 1.15em;">
+                        Each <span class="accent-primary">block</span> is a <span
+                            class="accent-highlight">function</span><br>
+                        that hides complex code, so you can focus on <strong>logic</strong>.
+                    </p>
+                </div>
+
+                <div class="fragment" style="margin-top: 1.2em;">
+                    <p>Examples:</p>
+                    <p style="font-size: 1.3em;">
+                        <strong>Scratch</strong> · Blockly · MakeCode · Sprite Box
+                    </p>
+                </div>
+
+                <aside class="notes">
+                    Definition from the textbook (page 52-53).
+                    But now students understand WHY blocks exist — they're abstraction!
+                    Scratch = MIT, most popular. We'll use this.
+                    ~1 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 11: Visual Programming Approaches -->
+            <section>
+                <h2>Visual Programming <span class="accent-primary">Approaches</span></h2>
+
+                <p class="fragment">Different systems use different ways to show logic visually:</p>
+
+                <div class="term-grid" style="margin-top: 1em; grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="term-card fragment" style="text-align: center; padding: 1.1em;">
+                        <div style="font-size: 2.6em; margin-bottom: 0.2em;">🧩</div>
+                        <strong style="font-size: 1.2em;">Block-Based</strong><br>
+                        <span class="text-muted">Drag and snap blocks together like puzzle pieces</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1.1em;">
+                        <div style="font-size: 2.6em; margin-bottom: 0.2em;">🧭</div>
+                        <strong style="font-size: 1.2em;">Flowchart-Based</strong><br>
+                        <span class="text-muted">Connect symbols with arrows to show order of steps</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1.1em;">
+                        <div style="font-size: 2.6em; margin-bottom: 0.2em;">🧱</div>
+                        <strong style="font-size: 1.2em;">Icon-Based</strong><br>
+                        <span class="text-muted">Use icons to represent actions and objects</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: Visual Programming Applications Definition -->
+            <section>
+                <h2>Visual Programming <span class="accent-highlight">Application</span></h2>
+
+                <div class="term-grid" style="margin-top: 1em; grid-template-columns: 1fr;">
+                    <div class="term-card fragment" style="padding: 1.2em; font-size: 1.05em;">
+                        <strong>Definition</strong><br>
+                        is a software tool or interactive environment that enables users to create computer programs
+                        using graphical elements such as blocks, icons, and flowcharts.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 13: Types of Visual Programming Applications -->
+            <section>
+                <h2>Types of <span class="accent-primary">Visual Programming Applications</span></h2>
+
+                <p class="fragment">Visual programming is used in three main categories:</p>
+
+                <div class="pillar-grid" style="margin-top: 1em;">
+                    <div class="pillar fragment"
+                        style="background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(74, 158, 255, 0.05)); border-color: var(--accent-primary);">
+                        📚 EDUCATIONAL<br>
+                        <small style="font-weight: 400;">Used in schools to introduce programming concepts in a fun and
+                            accessible way.</small>
+                    </div>
+                    <div class="pillar fragment"
+                        style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05)); border-color: var(--accent-secondary);">
+                        🎨 MULTIMEDIA<br>
+                        <small style="font-weight: 400;">Create digital content like presentations, animations, and
+                            websites using images and sound.</small>
+                    </div>
+                    <div class="pillar fragment"
+                        style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05)); border-color: var(--accent-highlight);">
+                        🎮 VIDEO GAMES<br>
+                        <small style="font-weight: 400;">Interactive platforms for creating games, building
+                            environments, and developing game mechanics.</small>
+                    </div>
+                </div>
+
+                <p class="fragment text-muted" style="margin-top: 1em;">
+                    The same block-based approach works for all of these!
+                </p>
+
+                <aside class="notes">
+                    Three categories from the curriculum:
+                    1. Educational - learning to code in schools (like what we're doing)
+                    2. Multimedia - creating visual content, animations, presentations
+                    3. Video Games - building interactive experiences
+                    ~1 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 14: Examples of Visual Programming Tools -->
+            <section>
+                <h2>Examples of <span class="accent-highlight">Visual Programming Tools</span></h2>
+
+                <p class="fragment">Popular visual programming tools you might encounter:</p>
+
+                <div class="term-grid" style="margin-top: 1em; grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="term-card fragment" style="text-align: center; padding: 1.2em;">
+                        <div style="font-size: 3em; margin-bottom: 0.2em;">🐱</div>
+                        <strong style="font-size: 1.3em;">Scratch</strong><br>
+                        <span class="text-muted">MIT's beginner-friendly platform</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1.2em;">
+                        <div style="font-size: 3em; margin-bottom: 0.2em;">🤖</div>
+                        <strong style="font-size: 1.3em;">Microsoft MakeCode</strong><br>
+                        <span class="text-muted">For micro:bit & game development</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1.2em;">
+                        <div style="font-size: 3em; margin-bottom: 0.2em;">📦</div>
+                        <strong style="font-size: 1.3em;">Sprite Box</strong><br>
+                        <span class="text-muted">Puzzle-based coding game</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 15: Common Interface Features -->
+            <section>
+                <h2>Common <span class="accent-primary">Interface Features</span></h2>
+
+                <p class="fragment">Tools share similar controls to help you run and view your projects:</p>
+
+                <div class="term-grid" style="margin-top: 1em; grid-template-columns: 1fr 1fr 1fr 1fr;">
+                    <div class="term-card fragment" style="text-align: center; padding: 1em;">
+                        <div style="font-size: 2.5em; margin-bottom: 0.2em;">⛶</div>
+                        <strong>Full Screen Control</strong><br>
+                        <span class="text-muted">View your project full screen</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1em;">
+                        <div style="font-size: 2.5em; margin-bottom: 0.2em;">🔲</div>
+                        <strong>Stage Size Toggle</strong><br>
+                        <span class="text-muted">Switch Large/Small stage view</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1em;">
+                        <div style="font-size: 2.5em; margin-bottom: 0.2em;">🖼️</div>
+                        <strong>Choose Backdrop</strong><br>
+                        <span class="text-muted">Change the background image</span>
+                    </div>
+                    <div class="term-card fragment" style="text-align: center; padding: 1em;">
+                        <div style="font-size: 2.5em; margin-bottom: 0.2em;">🚦</div>
+                        <strong>Start/Stop Buttons</strong><br>
+                        <span class="text-muted">Green Flag to run, Red Octagon to stop</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 16: Scratch Interface -->
+            <section>
+                <h2>The Scratch Interface</h2>
+
+                <div class="scratch-container">
+                    <img src="scratch_ui.png" class="scratch-img" alt="Scratch Interface">
+
+                    <!-- Overlays appear as fragments -->
+                    <div class="overlay-box zone-palette fragment">
+                        <span class="zone-label">Block Palette</span>
+                    </div>
+                    <div class="overlay-box zone-script fragment">
+                        <span class="zone-label">Script Area</span>
+                    </div>
+                    <div class="overlay-box zone-stage fragment">
+                        <span class="zone-label">Stage</span>
+                    </div>
+                    <div class="overlay-box zone-sprite fragment">
+                        <span class="zone-label">Sprite Pane</span>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 0.5em; font-size: 0.95em;">
+                    <strong>Remember:</strong> Scripts are built in the <span class="accent-primary">Script Area</span>
+                    to control each sprite!
+                </p>
+
+                <aside class="notes">
+                    Walk through each zone:
+                    - Palette (left): your toolbox, blocks organized by category
+                    - Script area (center): where you build SCRIPTS for each sprite
+                    - Stage (top right): where your programs run
+                    - Sprite pane (bottom right): your characters/objects
+                    - Emphasize: Each sprite has its own scripts in the script area
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 17: Human Robot Game -->
+            <section>
+                <h2>Activity: <span class="accent-secondary">The Human Robot</span></h2>
+
+                <div class="game-rules">
+                    <p><strong>The idea:</strong> I'm a robot. You're the programmers.</p>
+                    <p class="fragment">Robots only understand <em>exact</em> instructions.</p>
+
+                    <p class="fragment" style="margin-top: 0.6em;"><strong>Your commands:</strong></p>
+                    <ul>
+                        <li class="fragment"><code>"Move [number] steps"</code></li>
+                        <li class="fragment"><code>"Turn left"</code> / <code>"Turn right"</code></li>
+                        <li class="fragment"><code>"Say [message]"</code></li>
+                    </ul>
+
+                    <p class="fragment accent-primary" style="margin-top: 0.6em; font-size: 1.05em;">
+                        Your task: Get me from here to the door using only these commands.
+                    </p>
+                </div>
+
+                <aside class="notes">
+                    Physical activity, ~3-4 min.
+                    Be deliberately literal: "go to door" = "I don't understand."
+                    Let them struggle a bit, then move to next slide.
+                </aside>
+            </section>
+
+            <!-- SLIDE 18: Scratch Demo - Same Activity -->
+            <section>
+                <h2>Now Let's Do It in <span class="accent-highlight">Scratch</span></h2>
+
+                <div class="game-rules" style="text-align: center;">
+                    <p>Those same commands exist as <strong>blocks</strong> in Scratch:</p>
+
+                    <div class="fragment"
+                        style="margin: 0.8em 0; display: flex; justify-content: center; gap: 1.5em; flex-wrap: wrap;">
+                        <div
+                            style="background: #4C97FF; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                            move (10) steps
+                        </div>
+                        <div
+                            style="background: #4C97FF; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                            turn ↻ (15) degrees
+                        </div>
+                        <div
+                            style="background: #9966FF; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                            say [Hello!]
+                        </div>
+                    </div>
+
+                    <p class="fragment" style="margin-top: 0.8em;">
+                        Same logic. Same thinking.<br>
+                        <span class="accent-primary">But now the cat is your robot.</span>
+                    </p>
+                </div>
+
+                <aside class="notes">
+                    LIVE DEMO: Open Scratch, drag blocks, make cat move.
+                    Show how the commands they just used are real blocks.
+                    "Move 10 steps" → cat moves.
+                    "Turn right" → cat turns.
+                    ~3-4 min. Keep it simple, just show it works.
+                </aside>
+            </section>
+
+            <!-- SLIDE 19: Quick Win -->
+            <section>
+                <h2>Your First Program</h2>
+
+                <div style="display: flex; gap: 3em; align-items: center; justify-content: center; margin-top: 0.5em; width: 100%; max-width: 1400px;">
+                    <div style="text-align: left; flex-shrink: 0;">
+                        <p style="font-size: 1em; margin: 0.3em 0;"><strong>Try this:</strong></p>
+                        <div class="fragment"
+                            style="background: #FFAB19; color: white; padding: 0.4em 0.8em; border-radius: 8px; font-weight: 600; margin: 0.3em 0;">
+                            when 🏴 clicked
+                        </div>
+                        <div class="fragment"
+                            style="background: #4C97FF; color: white; padding: 0.4em 0.8em; border-radius: 8px; font-weight: 600; margin: 0.3em 0;">
+                            move (50) steps
+                        </div>
+                        <div class="fragment"
+                            style="background: #9966FF; color: white; padding: 0.4em 0.8em; border-radius: 8px; font-weight: 600; margin: 0.3em 0;">
+                            say [Hello!] for (2) seconds
+                        </div>
+                    </div>
+
+                    <div class="fragment" style="display: flex; gap: 1.5em; align-items: center; justify-content: center; flex: 1;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3em; margin-bottom: 0.2em;">🐱</div>
+                            <div
+                                style="background: rgba(255,255,255,0.08); padding: 0.8em; border-radius: 12px; border: 2px solid var(--accent-primary);">
+                                <strong>Sprite</strong><br>
+                                <span class="text-muted" style="font-size: 0.85em;">The character</span>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 1.8em;">+</div>
+
+                        <div style="text-align: center;">
+                            <div style="font-size: 3em; margin-bottom: 0.2em;">📝</div>
+                            <div
+                                style="background: rgba(255,255,255,0.08); padding: 0.8em; border-radius: 12px; border: 2px solid var(--accent-highlight);">
+                                <strong>Script</strong><br>
+                                <span class="text-muted" style="font-size: 0.85em;">The instructions</span>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 1.8em;">=</div>
+
+                        <div style="text-align: center;">
+                            <div style="font-size: 3em; margin-bottom: 0.2em;">🎮</div>
+                            <div
+                                style="background: rgba(255,255,255,0.08); padding: 0.8em; border-radius: 12px; border: 2px solid var(--accent-secondary);">
+                                <strong>Behaviour</strong><br>
+                                <span class="text-muted" style="font-size: 0.85em;">What it does</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="fragment text-muted" style="margin-top: 1em; font-style: italic; font-size: 1.1em;">
+                    Every sprite can have multiple scripts controlling different aspects of its behaviour!
+                </p>
+
+                <aside class="notes">
+                    This is a KEY definition from the curriculum.
+                    Sprite = the character/object (cat, ball, etc.)
+                    Script = the blocks you attach to that sprite
+                    Behaviour = what the sprite does when the script runs
+                    Example: One script makes cat move, another makes it meow
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 20: Syntax -->
+            <section>
+                <h2>Syntax: The <span class="accent-primary">Grammar of Code</span></h2>
+
+                <p class="fragment" style="font-size: 1.15em;">
+                    Rules that define how to write code correctly. If blocks don't fit, the code won't run!
+                </p>
+
+                <div class="puzzle-demo" style="margin-top: 1em;">
+                    <div class="puzzle-piece puzzle-fit fragment">move (10) steps</div>
+                    <div class="puzzle-piece puzzle-fit fragment">say [Hello!]</div>
+                    <div class="puzzle-piece puzzle-nofit fragment">move [10 steps]</div>
+                    <div class="puzzle-piece puzzle-nofit fragment">say Hello!</div>
+                </div>
+            </section>
+
+            <!-- SLIDE 21: Variables -->
+            <section>
+                <h2>Variables: The <span class="accent-secondary">Box</span></h2>
+
+                <p class="fragment">A container that stores data.</p>
+
+                <div class="variable-demo fragment">
+                    <div class="variable-label">Score</div>
+                    <div class="variable-box">10</div>
+                </div>
+
+                <div class="fragment" style="margin-top: 1em;">
+                    <p>We can change what's inside:</p>
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; gap: 1em; margin-top: 0.5em;">
+                        <div class="variable-box" style="width: 100px; height: 70px; font-size: 1.5em;">10</div>
+                        <span style="font-size: 2em;">→</span>
+                        <div class="variable-box"
+                            style="width: 100px; height: 70px; font-size: 1.5em; border-color: var(--accent-highlight);">
+                            20</div>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 0.8em;">
+                    This is called <span class="accent-primary">Assignment</span> (setting the value).
+                </p>
+
+                <aside class="notes">
+                    Think of a box with a label on it.
+                    "Score" is the name, "10" is what's inside.
+                    We can take out the 10, put in 20 - the box stays, contents change.
+                    "Assignment" = putting a value in the box.
+                    In Scratch: "set Score to 10" - that's assignment.
+                    ~2 min
+                </aside>
+            </section>
+
+            <!-- SLIDE 22: Variables in Scratch - PRACTICAL -->
+            <section>
+                <h2>Let's Try It: <span class="accent-highlight">Variables in Scratch</span></h2>
+
+                <div class="build-steps" style="max-width: 1000px;">
+                    <div class="build-step fragment">
+                        <div class="step-number">1</div>
+                        <span>Go to <span class="scratch-block block-data">Variables</span> category (orange)</span>
+                    </div>
+
+                    <div class="build-step fragment">
+                        <div class="step-number">2</div>
+                        <span>Click <strong>"Make a Variable"</strong> → Name it <code>myScore</code></span>
+                    </div>
+
+                    <div class="build-step fragment" style="margin-bottom: 1.2em;">
+                        <div class="step-number">3</div>
+                        <span>Drag: <span class="scratch-block block-data" style="margin-right: 0.5em;">set [myScore] to (0)</span></span>
+                    </div>
+
+                    <div class="build-step fragment">
+                        <div class="step-number">4</div>
+                        <span>Add: <span class="scratch-block block-data" style="margin-right: 0.5em;">change [myScore] by (1)</span></span>
+                    </div>
+
+                    <div class="build-step fragment"
+                        style="background: rgba(16, 185, 129, 0.2); padding: 0.5em 1em; border-radius: 8px;">
+                        <div class="step-number" style="background: var(--accent-highlight);">5</div>
+                        <span>Click the blocks! Watch the variable on stage change! 🎉</span>
+                    </div>
+                </div>
+
+                <p class="fragment text-muted" style="margin-top: 1em;">
+                    See the orange box on stage? That's your variable <em>displaying</em> its value!
+                </p>
+
+                <aside class="notes">
+                    HANDS-ON TIME! ~5 min
+                    Walk them through step by step. Everyone opens Scratch.
+                    Key moments:
+                    - Show checkmark to display variable on stage
+                    - Click "set" block - variable becomes 0
+                    - Click "change" block - variable goes up by 1 each click
+                    This is CONCRETE - they see the box, they see the number change.
+                </aside>
+            </section>
+
+            <!-- SLIDE 23: Input & Output -->
+            <section>
+                <h2>Input & Output: <span class="accent-highlight">I/O</span></h2>
+
+                <div class="io-demo">
+                    <div class="io-item fragment">
+                        <div class="io-icon">👂</div>
+                        <div class="io-label accent-primary">INPUT</div>
+                        <p style="font-size: 0.9em; margin: 0.3em 0;">The computer's ears</p>
+                        <div class="scratch-block block-sensing" style="margin-top: 0.5em;">ask "What is your name?" and
+                            wait</div>
+                    </div>
+
+                    <div class="io-item fragment">
+                        <div class="io-icon">💬</div>
+                        <div class="io-label accent-highlight">OUTPUT</div>
+                        <p style="font-size: 0.9em; margin: 0.3em 0;">The computer's mouth</p>
+                        <div class="scratch-block block-looks" style="margin-top: 0.5em;">say "Hello!"</div>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 1em;">
+                    <span class="accent-secondary">Without Input, computers are useless!</span>
+                </p>
+
+                <aside class="notes">
+                    INPUT = how data gets IN (keyboard, mouse, microphone).
+                    OUTPUT = how results come OUT (screen, speakers).
+                    Ears and mouth analogy - computer listens, then responds.
+                    Show how to drag "answer" into the say block's white bubble.
+                    This is the INPUT-PROCESS-OUTPUT pattern they'll use constantly!
+                </aside>
+            </section>
+
+            <!-- SLIDE 24: I/O in Scratch - PRACTICAL -->
+            <section>
+                <h2 style="margin-bottom: 0.2em; font-size: 1.8em;">Let's Try It: <span class="accent-highlight">I/O in Scratch</span></h2>
+
+                <div class="build-steps" style="max-width: 900px; margin-top: 0.2em;">
+                    <div class="build-step fragment" style="margin-bottom: 0.2em; padding: 0.3em 0.6em; font-size: 0.9em;">
+                        <div class="step-number" style="font-size: 0.9em;">1</div>
+                        <span>Go to <span class="scratch-block block-sensing" style="display: inline-block; vertical-align: middle; font-size: 0.8em; padding: 0.2em 0.5em;">Sensing</span> (light blue)</span>
+                    </div>
+
+                    <div class="build-step fragment" style="margin-bottom: 0.2em; padding: 0.3em 0.6em; font-size: 0.9em;">
+                        <div class="step-number" style="font-size: 0.9em;">2</div>
+                        <span>Drag: <span class="scratch-block block-sensing" style="display: inline-block; vertical-align: middle; font-size: 0.8em; padding: 0.2em 0.5em;">ask [What's your name?] and wait</span></span>
+                    </div>
+
+                    <div class="build-step fragment" style="margin-bottom: 0.2em; padding: 0.3em 0.6em; font-size: 0.9em;">
+                        <div class="step-number" style="font-size: 0.9em;">3</div>
+                        <span>Go to <span class="scratch-block block-looks" style="display: inline-block; vertical-align: middle; font-size: 0.8em; padding: 0.2em 0.5em;">Looks</span> → Drag: <span class="scratch-block block-looks" style="display: inline-block; vertical-align: middle; font-size: 0.8em; padding: 0.2em 0.5em;">say [Hello!]</span></span>
+                    </div>
+
+                    <div class="build-step fragment" style="margin-bottom: 0.2em; padding: 0.3em 0.6em; font-size: 0.9em;">
+                        <div class="step-number" style="font-size: 0.9em;">4</div>
+                        <span>Find <span class="scratch-block block-sensing" style="display: inline-block; vertical-align: middle; font-size: 0.8em; padding: 0.2em 0.5em;">answer</span> → Put it INSIDE the say block!</span>
+                    </div>
+
+                    <div class="build-step fragment"
+                        style="background: rgba(16, 185, 129, 0.2); padding: 0.4em 0.8em; border-radius: 8px; font-size: 0.9em;">
+                        <div class="step-number" style="background: var(--accent-highlight); font-size: 0.9em;">5</div>
+                        <span>Click the blocks! Type your name → Cat says it back! 🎉</span>
+                    </div>
+                </div>
+
+                <p class="fragment text-muted" style="margin-top: 0.5em; font-size: 0.9em;">
+                    <strong>Input</strong> (ask) → <strong>Process</strong> (store in answer) → <strong>Output</strong> (say)
+                </p>
+
+                <aside class="notes">
+                    HANDS-ON TIME! ~5 min
+                    Walk them through step by step.
+                    Key insight: the "answer" variable automatically stores their input.
+                    This is the INPUT-PROCESS-OUTPUT pattern!
+                </aside>
+            </section>
+
+            <!-- SLIDE 25: Mini Project - Greeter -->
+            <section>
+                <h2>Mini Project: <span class="accent-primary">The Greeter</span></h2>
+
+                <p class="fragment">Combine everything we learned into ONE program!</p>
+
+                <div class="mission-box fragment" style="margin: 1em auto; max-width: 900px;">
+                    <h3 style="color: var(--accent-highlight); margin-top: 0;">🎯 The Goal</h3>
+                    <p>Make a sprite that asks your name, counts how many times you've said hello, and greets you!</p>
+                </div>
+
+                <div class="fragment"
+                    style="display: flex; gap: 1em; justify-content: center; flex-wrap: wrap; margin-top: 1em;">
+                    <div
+                        style="background: #FFAB19; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                        when 🏴 clicked
+                    </div>
+                    <div
+                        style="background: #5CB1D6; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                        ask [What's your name?] and wait
+                    </div>
+                </div>
+                <div class="fragment"
+                    style="display: flex; gap: 1em; justify-content: center; flex-wrap: wrap; margin-top: 0.5em;">
+                    <div
+                        style="background: #FF8C1A; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                        change [greetCount] by (1)
+                    </div>
+                    <div
+                        style="background: #9966FF; color: white; padding: 0.5em 1em; border-radius: 8px; font-weight: 600;">
+                        say (join [Hello ] (answer))
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 1em; font-size: 1.1em;">
+                    <strong>Uses:</strong> Variable ✓ | Input ✓ | Output ✓ | Syntax ✓
+                </p>
+
+                <aside class="notes">
+                    HANDS-ON PROJECT! ~10 min
+                    This ties EVERYTHING together:
+                    - Variable (greetCount) - they create it
+                    - Input (ask block)
+                    - Output (say block with join)
+                    - Syntax (blocks must snap correctly)
+                    Let them struggle a bit, walk around and help.
+                    Show the greetCount going up each time they run it!
+                </aside>
+            </section>
+
+            <!-- SLIDE 26: Summary -->
+            <section>
+                <h2 style="margin-bottom: 0.3em;">Key Terms</h2>
+
+                <div class="term-grid" style="gap: 0.4em; max-width: 1400px; margin-top: 0.3em;">
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Transistor</strong><br>
+                        A tiny switch (ON=1, OFF=0)
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Binary</strong><br>
+                        The language of 0s and 1s
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Abstraction</strong><br>
+                        Hiding complexity behind something simple
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Function</strong><br>
+                        A named group of instructions
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Syntax</strong><br>
+                        Rules for writing code correctly
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Variable</strong><br>
+                        A container that stores data
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Input/Output</strong><br>
+                        How data enters and exits
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Visual Programming</strong><br>
+                        Creating programs using pictures and blocks
+                    </div>
+                    <div class="term-card fragment" style="padding: 0.4em 0.6em; font-size: 0.8em;">
+                        <strong>Sprite</strong><br>
+                        A character or object in Scratch
+                    </div>
+                </div>
+
+                <div class="fragment"
+                    style="margin-top: 0.3em; padding: 0.4em 1em; background: rgba(74, 158, 255, 0.1); border-radius: 8px;">
+                    <p style="margin: 0.1em 0; font-size: 0.95em;"><strong>Next time:</strong> We dive into the Big 3 of
+                        Logic: Sequence, Selection, Iteration! 🎮</p>
+                </div>
+
+                <aside class="notes">
+                    Quick recap - we covered A LOT today in this double session.
+                    Transistors → Binary → Abstraction → Functions → Blocks → Syntax → Variables → I/O
+                    Homework: create Scratch account at scratch.mit.edu, explore the interface.
+                    Questions?
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+
+    <script>
+        Reveal.initialize({
+            width: 1920,
+            height: 1080,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            transitionSpeed: 'default',
+            navigationMode: 'linear',
+            plugins: [RevealNotes, RevealHighlight]
+        });
+    </script>
+</body>
+
+</html>
