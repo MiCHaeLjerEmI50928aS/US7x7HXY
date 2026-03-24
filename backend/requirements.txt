@@ -1,0 +1,10 @@
+twelvelabs==1.0.0
+flask
+flask-cors
+openai
+python-dotenv
+requests
+gunicorn
+apscheduler
+yt-dlp
+moviepy
