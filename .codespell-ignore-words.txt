@@ -1,0 +1,140 @@
+heros
+fith
+curren
+aline
+gage
+akumulators
+ans
+titel
+socio
+ser
+currenty
+initialy
+assertin
+mor
+dota
+appen
+multline
+ource
+bu
+sting
+te
+crossreference
+linez
+als
+fo
+listin
+nam
+ture
+handlin
+panting
+occurence
+socio-economic
+rin
+rouge
+FPR
+fpr
+Clos
+Marz
+Pease
+nd
+ure
+COO
+coo
+trough
+ehr
+dout
+UserA
+UserB
+clientA
+covert
+dataS
+rithm
+Activ
+ane
+UE
+HSI
+FRAM
+LEVE
+stil
+tekst
+SOM
+activ
+activ
+Furst
+MAPE
+TBE
+HSA
+AER
+AFE
+ABD
+shs
+MulFunction
+3Nd
+relevants
+ot
+interm
+solated
+pre-select
+Pre-select
+pre-selected
+pre-selecting
+re-using
+non-useful
+# Truncated words in JSON stats (e.g. "Paged KV cach…" for cache)
+cach
+Lazer
+# retuned = re-tuned (e.g. learning rates retuned for a larger model); not "returned"
+retuned
+# Contributor display name
+didi
+# Base64 fragment in the sharp-libvips package integrity hash
+Ssee
+# Change Anything Changes Everything acronym
+cace
+vise
+tread
+alph
+notin
+# Kimera: MIT SPARK open-source metric-semantic SLAM library
+kimera
+tru
+derails
+mattern
+pres
+# Arm Scalable Matrix Extension (SME)
+sme
+SME
+# Directed Energy Deposition (DED) additive manufacturing process
+ded
+DED
+disjointness
+Disjointness
+fpt
+tung
+# Scope of Carbon TikZ color names in Chapter 15
+socred
+nees
+sarter
+# Truncated LaTeX command prefixes used in the section notation pipeline
+delt
+Delt
+# Lecture slides (2026-10-19)
+# hsa: H·S·A exposure-space identifier (vol3 lecture maps, figure names)
+hsa
+# Lien: author surname (Hadfield, Zhang, Lien, ... Anthropic)
+Lien
+# CNA: CVE Numbering Authority (NIST NVD vectors)
+CNA
+# ACI: agent-computer interface (SWE-agent)
+ACI
+# utilis / multipl: regex fragments in slides/tools/deckcheck.py patterns
+utilis
+multipl
+# numer: mach_timebase_info_data_t field (macOS C API)
+numer
+# inh: inherited-style dict in slides/tools/greek_thumbs.py
+inh
+# mot: MOT, the multi-object tracking alias in shared/concepts/ml-systems-field.yml
+mot
+mane
